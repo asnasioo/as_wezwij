@@ -22,7 +22,7 @@ RegisterCommand('wezwij', function(source, args, rawCommand)
     if targetId then
         local targetPlayer = ESX.GetPlayerFromId(targetId)
         if targetPlayer then
-            local wezwanieTekst = "Zostales wezwany przez " .. xPlayer.() .. " na kanal pomocy!"
+            local wezwanieTekst = "Zostales wezwany przez " .. GetPlayerName(source) .. " na kanal pomocy!"
             TriggerClientEvent('as_wezwij:pokazPowiadomienie', targetId, wezwanieTekst, 10)
             local logText = "Administrator " .. GetPlayerName(source) .. " wezwal " .. targetPlayer.getName()
             SendToDiscord(logText)
