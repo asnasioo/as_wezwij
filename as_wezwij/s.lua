@@ -22,9 +22,9 @@ RegisterCommand('wezwij', function(source, args, rawCommand)
     if targetId then
         local targetPlayer = ESX.GetPlayerFromId(targetId)
         if targetPlayer then
-            local wezwanieTekst = "Zostales wezwany przez " .. xPlayer.getName() .. " na kanal pomocy!"
+            local wezwanieTekst = "Zostales wezwany przez " .. xPlayer.() .. " na kanal pomocy!"
             TriggerClientEvent('as_wezwij:pokazPowiadomienie', targetId, wezwanieTekst, 10)
-            local logText = "Administrator " .. xPlayer.getName() .. " wezwal " .. targetPlayer.getName()
+            local logText = "Administrator " .. GetPlayerName(source) .. " wezwal " .. targetPlayer.getName()
             SendToDiscord(logText)
 
             SendPingToDiscord(discordPingMessage)
@@ -48,7 +48,7 @@ RegisterCommand('offlinewezwij', function(source, args, rawCommand)
     end
 
     if discordId then
-        local discordPingMessage = "<@" .. discordId .. "> Zostales wezwany przez " .. xPlayer.getName() .. " na kanal pomocy!"
+        local discordPingMessage = "<@" .. discordId .. "> Zostales wezwany przez " .. GetPlayerName(source) .. " na kanal pomocy!"
         SendPingToDiscord(discordPingMessage)
     else
         xPlayer.showNotification('Użyj: /offlinewezwij [discord id]')
