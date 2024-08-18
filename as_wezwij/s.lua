@@ -1,15 +1,30 @@
 ESX = exports["es_extended"]:getSharedObject()
 
+local allowedGroups = {
+    'best',
+    'admin',   
+    'mod',  
+    'support',
+    'trialsupport'   
+}
+
 RegisterCommand('wezwij', function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     local targetId = tonumber(args[1])
+
+    local playerGroup = xPlayer.getGroup()
+
+    if not hasPermission(playerGroup) then
+        xPlayer.showNotification('ju dont hef permisjon.')
+        return
+    end
 
     if targetId then
         local targetPlayer = ESX.GetPlayerFromId(targetId)
         if targetPlayer then
             local wezwanieTekst = "Zostales wezwany przez " .. xPlayer.getName() .. " na kanal pomocy!"
             TriggerClientEvent('as_wezwij:pokazPowiadomienie', targetId, wezwanieTekst, 10)
-            local logText = "Administrator " .. xPlayer.getName() .. " wezwał " .. targetPlayer.getName()
+            local logText = "Administrator " .. xPlayer.getName() .. " wezwal " .. targetPlayer.getName()
             SendToDiscord(logText)
 
             SendPingToDiscord(discordPingMessage)
@@ -24,6 +39,13 @@ end, false)
 RegisterCommand('offlinewezwij', function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     local discordId = args[1]
+
+    local playerGroup = xPlayer.getGroup()
+
+    if not hasPermission(playerGroup) then
+        xPlayer.showNotification('ju dont hef permisjon.')
+        return
+    end
 
     if discordId then
         local discordPingMessage = "<@" .. discordId .. "> Zostales wezwany przez " .. xPlayer.getName() .. " na kanal pomocy!"
@@ -45,4 +67,13 @@ function SendToDiscord(message)
     if webhook and webhook ~= '' then
         PerformHttpRequest(webhook, function(err, text, headers) end, 'POST', json.encode({content = message}), { ['Content-Type'] = 'application/json' })
     end
+end
+
+function hasPermission(group)
+    for _, allowedGroup in ipairs(allowedGroups) do
+        if group == allowedGroup then
+            return true
+        end
+    end
+    return false
 end
